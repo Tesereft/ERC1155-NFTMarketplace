@@ -29,6 +29,12 @@ contract Commerce is ReentrancyGuard {
         owner = msg.sender;
     }
 
+    struct OfferResponse {
+        bool exists;
+        uint index;
+        uint totalPrice;
+    }
+
     struct Offers {
         address sender;
         address nftAddress;
@@ -110,19 +116,19 @@ contract Commerce is ReentrancyGuard {
     }
 
     function withdrawOffer(address nftAddress, uint tokenId, address tokenOwner) external nonReentrant() {
-        (bool hasOffer, uint index, uint amount) = offerExists(nftAddress, tokenId, tokenOwner, msg.sender);
-        require(hasOffer, "Commerce: You do not have an existing offer!");
+        OfferResponse memory response = offerExists(nftAddress, tokenId, tokenOwner, msg.sender);
+        require(response.exists, "Commerce: You do not have an existing offer!");
         Offers[] storage allOffer = buyOffers[nftAddress][tokenId][tokenOwner];       
         
         alreadyOffered[nftAddress][tokenId][msg.sender] = false;
 
-        allOffer[index] = allOffer[allOffer.length - 1];
+        allOffer[response.index] = allOffer[allOffer.length - 1];
         allOffer.pop();
 
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        (bool success, ) = payable(msg.sender).call{value: response.totalPrice}("");
         require(success, "Failed to send Ether");
         
-        emit WithdrewOffer(tokenId, nftAddress, tokenOwner, msg.sender, amount, index);
+        emit WithdrewOffer(tokenId, nftAddress, tokenOwner, msg.sender, response.totalPrice, response.index);
         
     }
 
@@ -174,18 +180,27 @@ contract Commerce is ReentrancyGuard {
         return deposits[msg.sender];
     }
 
-    function offerExists(address nftAddress, uint tokenId, address tokenOwner, address account) internal view returns(bool answer, uint index, uint totalPrice) {
+    function offerExists(address nftAddress, uint tokenId, address tokenOwner, address account) internal view returns(OfferResponse memory response) {
         Offers[] storage allOffers = buyOffers[nftAddress][tokenId][tokenOwner];
         uint length = allOffers.length;
         
+        if(length == 0) {    
+            response.exists = false;
+            response.index = 0;
+            response.totalPrice = 0;
+
+            return response;
+        }
+
         for(uint i = 0; i < length; i++){
             if(allOffers[i].sender == account){
-                answer = true;
-                index = i;
-                totalPrice = allOffers[i].totalPrice;
+                response.exists = true;
+                response.index = i;
+                response.totalPrice = allOffers[i].totalPrice;
+
+                return response;
             }
         }
-        
     }
 
      

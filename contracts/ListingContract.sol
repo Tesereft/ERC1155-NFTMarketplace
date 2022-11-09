@@ -3,7 +3,7 @@ pragma solidity ^0.8.4;
 
 import "./NFTStorage.sol";
 import "./UserDefined1155.sol";
-import "./Monion1155.sol";
+import "./Greener1155.sol";
 import "hardhat/console.sol";
 // import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
@@ -15,17 +15,17 @@ contract Listing {
     event UpdatedPrice(uint indexed tokenId, address indexed nftAddress, address indexed owner, uint newPrice);
 
     MyNFTStorage vault;
-    Monion1155 monionMinter;
+    Greener1155 greenerMinter;
     
     mapping(address => address[]) private userToUserDefinedNFTs;
 
-    constructor(address _storageAddress, address _monionMinter){
+    constructor(address _storageAddress, address _greenerMinter){
         vault = MyNFTStorage(_storageAddress);
-        monionMinter = Monion1155(_monionMinter);
+        greenerMinter = Greener1155(_greenerMinter);
     }
 
-    function mintMonionNFT(uint quantity, uint96 royaltyFee) external {
-        monionMinter.mint(quantity, msg.sender, royaltyFee);
+    function mintGreenerNFT(uint quantity, uint96 royaltyFee) external {
+        greenerMinter.mint(quantity, msg.sender, royaltyFee);
     }
 
     // function mintUserNFT(uint amount, uint96 _fee) external {
@@ -41,8 +41,8 @@ contract Listing {
         emit ListedForSale(tokenId, nftAddress, price, msg.sender, quantity);
     }
 
-    function addMonionListingForSale(address nftAddress, uint tokenId, uint tokenPrice, uint quantity) external  {
-        vault._listMonionNFTForSale(nftAddress, tokenId, tokenPrice, payable(msg.sender), quantity);
+    function addGreenerListingForSale(address nftAddress, uint tokenId, uint tokenPrice, uint quantity) external  {
+        vault._listGreenerNFTForSale(nftAddress, tokenId, tokenPrice, payable(msg.sender), quantity);
         uint price = vault.getTokenPrice(nftAddress, tokenId, msg.sender);
         emit ListedForSale(tokenId, nftAddress, price, msg.sender, quantity);
     }

@@ -28,7 +28,7 @@ describe("ERC1155 contracts Tests", function () {
     await vault.deployed();
     // console.log(`Vault contract address is ${vault.address}`);
 
-    const Minter = await ethers.getContractFactory("Monion1155");
+    const Minter = await ethers.getContractFactory("Greener1155");
     minter = await Minter.deploy(vault.address, admin.address);
     await minter.deployed();
     // console.log(`Minter contract address is ${minter.address}`);
@@ -83,8 +83,8 @@ describe("ERC1155 contracts Tests", function () {
     }
     assert(false);
   });
-  it("should allow a user mint NFTs from Monion's instance", async function () {
-    expect(await lister.connect(alice).mintMonionNFT(4, 200))
+  it("should allow a user mint NFTs from Greener's instance", async function () {
+    expect(await lister.connect(alice).mintGreenerNFT(4, 200))
       .to.emit(minter, "Minted")
       .withArgs(1, alice.address, 4);
   });
@@ -97,14 +97,14 @@ describe("ERC1155 contracts Tests", function () {
       .to.emit(newCollection, "Minted")
       .withArgs(1, alice.address, newCollection.address, 4);
   });
-  it("should allow a user list monion minted NFTs", async function () {
+  it("should allow a user list greener minted NFTs", async function () {
     const tokenPrice = ethers.utils.parseEther("3");
     // const tx = await minter.balanceOf(alice.address, 1)
     // console.log(tx)
     await minter.connect(alice).setApprovalForAll(vault.address, true);
     await lister
       .connect(alice)
-      .addMonionListingForSale(minter.address, 1, tokenPrice, 3);
+      .addGreenerListingForSale(minter.address, 1, tokenPrice, 3);
     const tx = await vault
       .connect(alice)
       .getToken(minter.address, 1, alice.address);
@@ -126,7 +126,7 @@ describe("ERC1155 contracts Tests", function () {
     await newCollection.connect(alice).setApprovalForAll(vault.address, true);
     await lister
       .connect(alice)
-      .addMonionListingForSale(newCollection.address, 1, tokenPrice, 4);
+      .addGreenerListingForSale(newCollection.address, 1, tokenPrice, 4);
 
     const tokenItem = await vault
       .connect(alice)
@@ -181,7 +181,6 @@ describe("ERC1155 contracts Tests", function () {
     //   .viewOffers(minter.address, 1, alice.address);
     // console.log("Before :",offers);
     await commerce.connect(alice).acceptOffer(minter.address, 1, 0);
-
     // const offers1 = await commerce
     //   .connect(deployer)
     //   .viewOffers(minter.address, 1, alice.address);

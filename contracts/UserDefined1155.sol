@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
 
 /**
-- Contract uses a single URI which is the monion IPFS URI for hosting metadata
+- Contract uses a single URI which is the greener IPFS URI for hosting metadata
 - Contract relies on the metadata to store relevant info about the token such as name, description etc.
 - Contract issues tokenId to each token minted
 - Contract use is cheaper than if the user deployed a fresh instance of the ERC1155
@@ -27,12 +27,11 @@ contract UserDefined1155 is ERC1155, Ownable, Pausable, ERC2981, ERC1155Supply {
 
 
     
-    constructor(address _operator) ERC1155("monion-api/{id}.json") {
+    constructor(address _operator) ERC1155("greener-api/{id}.json") {
         operator = _operator;
     }
 
     
-
     function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
     }
@@ -62,8 +61,6 @@ contract UserDefined1155 is ERC1155, Ownable, Pausable, ERC2981, ERC1155Supply {
     }
 
     
-    
-
     function _beforeTokenTransfer(address theOperator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
         internal
         whenNotPaused

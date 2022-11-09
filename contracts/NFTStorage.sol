@@ -7,13 +7,13 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "./AdminContract.sol";
 import "./ListingContract.sol";
 import "./UserDefined1155.sol";
-import "./Monion1155.sol";
+import "./Greener1155.sol";
 
 contract MyNFTStorage is ERC1155Holder {
 
     UserDefined1155 minter;
     AdminConsole admin;
-    Monion1155 monionMinter;
+    Greener1155 greenerMinter;
 
     uint feePercent; //Marketplace fee
 
@@ -67,10 +67,10 @@ contract MyNFTStorage is ERC1155Holder {
         minter.safeTransferFrom(account, address(this), tokenId, quantity, "");
     }
 
-    function _listMonionNFTForSale(address nftAddress,uint tokenId, uint tokenPrice, address account, uint quantity) public { //please ensure that this remains internal
+    function _listGreenerNFTForSale(address nftAddress,uint tokenId, uint tokenPrice, address account, uint quantity) public { //please ensure that this remains internal
         require(admin.isAdmin(msg.sender) == true, "You do not have permission to access this contract!");
-        monionMinter = Monion1155(nftAddress);
-        uint tokensHeld = monionMinter.balanceOf(account, tokenId);
+        greenerMinter = Greener1155(nftAddress);
+        uint tokensHeld = greenerMinter.balanceOf(account, tokenId);
         require(tokensHeld > 0, "NFT Storage: This user does not have any units of this token available for listing!");
         require(quantity <= tokensHeld, "You cannot list this units of this token, try reducing the quantity!");
 
@@ -86,7 +86,7 @@ contract MyNFTStorage is ERC1155Holder {
         myToken.quantity += quantity;     
         myToken.owner = payable(account);
         
-        monionMinter.safeTransferFrom(account, address(this), tokenId, quantity, "");
+        greenerMinter.safeTransferFrom(account, address(this), tokenId, quantity, "");
     }
 
 

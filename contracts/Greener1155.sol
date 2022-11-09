@@ -10,15 +10,14 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
 /**
-- Contract uses a single URI which is the monion IPFS URI for hosting metadata
+- Contract uses a single URI which is the greener IPFS URI for hosting metadata
 - Contract relies on the metadata to store relevant info about the token such as name, description etc.
 - Contract issues tokenId to each token minted
 - Contract use is cheaper than if the user deployed a fresh instance of the ERC1155
 
 */
 
-
-contract Monion1155 is ERC1155, Ownable, Pausable, ERC2981, ERC1155Supply, ERC1155Holder {
+contract Greener1155 is ERC1155, Ownable, Pausable, ERC2981, ERC1155Supply, ERC1155Holder {
 
     
     event Minted (uint indexed tokenId,address indexed owner, uint quantity);
@@ -26,7 +25,7 @@ contract Monion1155 is ERC1155, Ownable, Pausable, ERC2981, ERC1155Supply, ERC11
     address operator;
     AdminConsole admin;
 
-    constructor(address _operator, address _admin) ERC1155("monion-api/{id}.json") {
+    constructor(address _operator, address _admin) ERC1155("greener-api/{id}.json") {
         operator = _operator;
         admin = AdminConsole(_admin);
     }
